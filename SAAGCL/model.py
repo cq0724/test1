@@ -36,12 +36,14 @@ class GCN(nn.Module):
         
         return self.act(out)
 
+
 class AvgReadout(nn.Module):
     def __init__(self):
         super(AvgReadout, self).__init__()
 
     def forward(self, seq):
         return torch.mean(seq, 1)
+
 
 class MaxReadout(nn.Module):
     def __init__(self):
@@ -50,12 +52,14 @@ class MaxReadout(nn.Module):
     def forward(self, seq):
         return torch.max(seq,1).values
 
+
 class MinReadout(nn.Module):
     def __init__(self):
         super(MinReadout, self).__init__()
 
     def forward(self, seq):
         return torch.min(seq, 1).values
+
 
 class WSReadout(nn.Module):
     def __init__(self):
@@ -69,6 +73,7 @@ class WSReadout(nn.Module):
         out = torch.mul(seq,sim)
         out = torch.sum(out,1)
         return out
+
 
 class Discriminator(nn.Module):
     def __init__(self, n_h, negsamp_round):
@@ -100,6 +105,7 @@ class Discriminator(nn.Module):
         logits = torch.cat(tuple(scs))
 
         return logits
+
 
 class Model(nn.Module):
     def __init__(self, n_in, n_h, activation, negsamp_round, readout):
@@ -162,6 +168,7 @@ class Gene(nn.Module):
 
         return ret, h
 
+
 class GraphConv(nn.Module):
     def __init__(self, input_dim, output_dim):
         super(GraphConv, self).__init__()
@@ -173,6 +180,7 @@ class GraphConv(nn.Module):
         g.update_all(message_func=dgl.function.copy_src(src='h', out='m'), reduce_func=dgl.function.sum(msg='m', out='h'))
         h = g.ndata['h']
         return self.linear(h)
+
 
 class Disc(nn.Module):
     def __init__(self, hid_dim, out_dim):
